@@ -1,10 +1,10 @@
 name: eventsource3
 description: A client and server implementation of Server-Sent Events.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/dsx1986/dart-eventsource
 
 environment:
-    sdk: "3.4.4"
+    sdk: "^3.4.4"
 
 dependencies:
     collection: ^1.15.0

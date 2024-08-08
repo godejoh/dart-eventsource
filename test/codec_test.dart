@@ -5,9 +5,9 @@ import "dart:convert";
 
 import "package:test/test.dart";
 
-import "package:eventsource/src/decoder.dart";
-import "package:eventsource/src/encoder.dart";
-import "package:eventsource/src/event.dart";
+import "package:eventsource3/src/decoder.dart";
+import "package:eventsource3/src/encoder.dart";
+import "package:eventsource3/src/event.dart";
 
 Map<Event, String> _VECTORS = {
   new Event(id: "1", event: "Add", data: "This is a test"):

@@ -1,4 +1,4 @@
-library eventsource.src.encoder;
+library eventsource3.src.encoder;
 
 import "dart:convert";
 import "dart:io";
@@ -9,7 +9,7 @@ import "proxy_sink.dart";
 class EventSourceEncoder extends Converter<Event, List<int>> {
   final bool compressed;
 
-  const EventSourceEncoder({bool this.compressed: false});
+  const EventSourceEncoder({this.compressed = false});
 
   static Map<String, Function> _fields = {
     "id: ": (e) => e.id,

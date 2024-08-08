@@ -1,4 +1,4 @@
-library eventsource.src.event;
+library eventsource3.src.event;
 
 class Event implements Comparable<Event> {
   /// An identifier that can be used to allow a client to replay

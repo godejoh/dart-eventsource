@@ -1,4 +1,4 @@
-library eventsource.src.proxy_sink;
+library eventsource3.src.proxy_sink;
 
 /// Just a simple [Sink] implementation that proxies the [add] and [close]
 /// methods.

@@ -1,4 +1,4 @@
-library eventsource.src.decoder;
+library eventsource3.src.decoder;
 
 import "dart:async";
 import "dart:convert";

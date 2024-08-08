@@ -1,4 +1,4 @@
-import "package:eventsource/eventsource.dart";
+import "package:eventsource3/eventsource.dart";
 
 main() async {
   // Because EventSource uses the http package, all platforms for which http

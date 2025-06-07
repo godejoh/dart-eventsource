@@ -6,7 +6,6 @@ import "dart:async";
 import "dart:convert";
 
 import "package:http/http.dart" as http;
-import "package:http/src/utils.dart" show encodingForCharset;
 import "package:http_parser/http_parser.dart" show MediaType;
 
 import "src/event.dart";
@@ -188,6 +187,6 @@ Encoding? encodingForCharset(String? charset) {
     case 'ascii':
       return ascii;
     default:
-      return utf8; // default fallback
+      return utf8;
   }
 }

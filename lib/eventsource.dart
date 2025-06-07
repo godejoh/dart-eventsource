@@ -160,21 +160,6 @@ class EventSource extends Stream<Event> {
   }
 }
 
-/// Returns the encoding to use for a response with the given headers. This
-/// defaults to [LATIN1] if the headers don't specify a charset or
-/// if that charset is unknown.
-Encoding _encodingForHeaders(Map<String, String> headers) =>
-    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset'])!;
-
-/// Returns the [MediaType] object for the given headers's content-type.
-///
-/// Defaults to `application/octet-stream`.
-MediaType _contentTypeForHeaders(Map<String, String> headers) {
-  var contentType = headers['content-type'];
-  if (contentType != null) return new MediaType.parse(contentType);
-  return new MediaType("application", "octet-stream");
-}
-
 Encoding? encodingForCharset(String? charset) {
   if (charset == null) return utf8;
   switch (charset.toLowerCase()) {
@@ -189,4 +174,19 @@ Encoding? encodingForCharset(String? charset) {
     default:
       return utf8;
   }
+}
+
+/// Returns the encoding to use for a response with the given headers. This
+/// defaults to [LATIN1] if the headers don't specify a charset or
+/// if that charset is unknown.
+Encoding _encodingForHeaders(Map<String, String> headers) =>
+    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset'])!;
+
+/// Returns the [MediaType] object for the given headers's content-type.
+///
+/// Defaults to `application/octet-stream`.
+MediaType _contentTypeForHeaders(Map<String, String> headers) {
+  var contentType = headers['content-type'];
+  if (contentType != null) return new MediaType.parse(contentType);
+  return new MediaType("application", "octet-stream");
 }

@@ -12,11 +12,7 @@ import "package:http_parser/http_parser.dart" show MediaType;
 import "src/event.dart";
 import "src/decoder.dart";
 
-enum EventSourceReadyState {
-  CONNECTING,
-  OPEN,
-  CLOSED,
-}
+enum EventSourceReadyState { CONNECTING, OPEN, CLOSED }
 
 class EventSourceSubscriptionException extends Event implements Exception {
   int statusCode;
@@ -26,7 +22,7 @@ class EventSourceSubscriptionException extends Event implements Exception {
   String get data => "$statusCode: $message";
 
   EventSourceSubscriptionException(this.statusCode, this.message)
-      : super(event: "error");
+    : super(event: "error");
 }
 
 /// An EventSource client that exposes a [Stream] of [Event]s.
@@ -57,34 +53,55 @@ class EventSource extends Stream<Event> {
   String _method;
 
   /// Create a new EventSource by connecting to the specified url.
-  static Future<EventSource> connect(url,
-      {http.Client? client,
-      String? lastEventId,
-      Map<String, String>? headers,
-      String? body,
-      String? method}) async {
+  static Future<EventSource> connect(
+    url, {
+    http.Client? client,
+    String? lastEventId,
+    Map<String, String>? headers,
+    String? body,
+    String? method,
+  }) async {
     // parameter initialization
     url = url is Uri ? url : Uri.parse(url);
     client = client ?? new http.Client();
     body = body ?? "";
     method = method ?? "GET";
     EventSource es = new EventSource._internal(
-        url, client, lastEventId, headers, body, method);
+      url,
+      client,
+      lastEventId,
+      headers,
+      body,
+      method,
+    );
     await es._start();
     return es;
   }
 
-  EventSource._internal(this.url, this.client, this._lastEventId, this.headers,
-      this._body, this._method) {
+  EventSource._internal(
+    this.url,
+    this.client,
+    this._lastEventId,
+    this.headers,
+    this._body,
+    this._method,
+  ) {
     _decoder = new EventSourceDecoder(retryIndicator: _updateRetryDelay);
   }
 
   // proxy the listen call to the controller's listen call
   @override
-  StreamSubscription<Event> listen(void onData(Event event)?,
-          {Function? onError, void onDone()?, bool? cancelOnError}) =>
-      _streamController.stream.listen(onData,
-          onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  StreamSubscription<Event> listen(
+    void onData(Event event)?, {
+    Function? onError,
+    void onDone()?,
+    bool? cancelOnError,
+  }) => _streamController.stream.listen(
+    onData,
+    onError: onError,
+    onDone: onDone,
+    cancelOnError: cancelOnError,
+  );
 
   /// Attempt to start a new connection.
   Future _start() async {
@@ -109,13 +126,17 @@ class EventSource extends Stream<Event> {
     }
     _readyState = EventSourceReadyState.OPEN;
     // start streaming the data
-    response.stream.transform(_decoder).listen((Event event) {
-      _streamController.add(event);
-      _lastEventId = event.id;
-    },
-        cancelOnError: true,
-        onError: _retry,
-        onDone: () => _readyState = EventSourceReadyState.CLOSED);
+    response.stream
+        .transform(_decoder)
+        .listen(
+          (Event event) {
+            _streamController.add(event);
+            _lastEventId = event.id;
+          },
+          cancelOnError: true,
+          onError: _retry,
+          onDone: () => _readyState = EventSourceReadyState.CLOSED,
+        );
   }
 
   /// Retries until a new connection is established. Uses exponential backoff.
@@ -144,7 +165,7 @@ class EventSource extends Stream<Event> {
 /// defaults to [LATIN1] if the headers don't specify a charset or
 /// if that charset is unknown.
 Encoding _encodingForHeaders(Map<String, String> headers) =>
-    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset']);
+    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset'])!;
 
 /// Returns the [MediaType] object for the given headers's content-type.
 ///
@@ -153,4 +174,20 @@ MediaType _contentTypeForHeaders(Map<String, String> headers) {
   var contentType = headers['content-type'];
   if (contentType != null) return new MediaType.parse(contentType);
   return new MediaType("application", "octet-stream");
+}
+
+Encoding? encodingForCharset(String? charset) {
+  if (charset == null) return utf8;
+  switch (charset.toLowerCase()) {
+    case 'utf-8':
+    case 'utf8':
+      return utf8;
+    case 'latin1':
+    case 'iso-8859-1':
+      return latin1;
+    case 'ascii':
+      return ascii;
+    default:
+      return utf8; // default fallback
+  }
 }

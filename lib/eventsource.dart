@@ -160,7 +160,7 @@ class EventSource extends Stream<Event> {
   }
 }
 
-Encoding? encodingForCharset(String? charset) {
+Encoding? encodingCharset(String? charset) {
   if (charset == null) return utf8;
   switch (charset.toLowerCase()) {
     case 'utf-8':
@@ -180,7 +180,7 @@ Encoding? encodingForCharset(String? charset) {
 /// defaults to [LATIN1] if the headers don't specify a charset or
 /// if that charset is unknown.
 Encoding _encodingForHeaders(Map<String, String> headers) =>
-    encodingForCharset(_contentTypeForHeaders(headers).parameters['charset'])!;
+    encodingCharset(_contentTypeForHeaders(headers).parameters['charset'])!;
 
 /// Returns the [MediaType] object for the given headers's content-type.
 ///

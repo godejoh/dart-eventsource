@@ -19,7 +19,7 @@ class EventSourceDecoder implements StreamTransformer<List<int>, Event> {
       Event currentEvent = new Event();
       // the regexes we will use later
       RegExp lineRegex = new RegExp(r"^([^:]*)(?::)?(?: )?(.*)?$");
-      RegExp removeEndingNewlineRegex = new RegExp(r"^((?:.|\n)*)\n$");
+      // RegExp removeEndingNewlineRegex = new RegExp(r"^((?:.|\n)*)\n$");
       // This stream will receive chunks of data that is not necessarily a
       // single event. So we build events on the fly and broadcast the event as
       // soon as we encounter a double newline, then we start a new one.
@@ -31,8 +31,7 @@ class EventSourceDecoder implements StreamTransformer<List<int>, Event> {
           // event is done
           // strip ending newline from data
           if (currentEvent.data != null) {
-            var match = removeEndingNewlineRegex.firstMatch(currentEvent.data!);
-            currentEvent.data = match?.group(1);
+            currentEvent.data = currentEvent.data!.trimRight();
           }
           controller.add(currentEvent);
           currentEvent = new Event();
